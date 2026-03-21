@@ -1154,7 +1154,6 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
           <button type="submit" class="btn-paper">Submit Intake</button>
         </div>
       </form>
-      <div id="s-intake" class="success-panel"><p>Thank you. We've received your intake and will be in touch within two business days.</p></div>
     </div>
 
 
@@ -1179,11 +1178,7 @@ function loopNotepad() {
 }
 setInterval(loopNotepad, 5200);
 
-function submitForm(e, sid) {
-  e.preventDefault();
-  e.target.style.display = 'none';
-  document.getElementById(sid).classList.add('show');
-}
+
 
 function openMailbox() {
   const m = document.getElementById('mailbox-modal');
