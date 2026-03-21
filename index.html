@@ -1169,81 +1169,91 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const el = document.getElementById(id + '-page');
-  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
-}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
 
-function handleIntake(e) {
+window.showPage = function(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  var el = document.getElementById(id + '-page');
+  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+};
+
+window.handleIntake = function(e) {
   e.preventDefault();
-  const form = document.getElementById('intake-form');
-  const data = new FormData(form);
-  fetch('https://api.web3forms.com/submit', { method:'POST', body:data })
-    .then(res => res.json())
-    .then(res => {
+  var form = document.getElementById('intake-form');
+  var data = new FormData(form);
+  fetch('https://api.web3forms.com/submit', { method: 'POST', body: data })
+    .then(function(r){ return r.json(); })
+    .then(function(){ 
       form.style.display = 'none';
       document.getElementById('intake-success').style.display = 'block';
-    })
-    .catch(() => {
+    }).catch(function(){
       form.style.display = 'none';
       document.getElementById('intake-success').style.display = 'block';
     });
-}
+};
 
-function openMailbox() {
+window.openMailbox = function() {
   document.getElementById('mailbox-modal').style.display = 'flex';
-}
+};
 
-function closeMailbox() {
+window.closeMailbox = function() {
   document.getElementById('mailbox-modal').style.display = 'none';
   document.getElementById('upload-success').style.display = 'none';
   document.getElementById('file-list').innerHTML = '';
   document.getElementById('dz-label').textContent = 'Drag files here, or click to browse';
   document.getElementById('file-input').value = '';
-}
+};
 
-function dzOver(e) {
+window.dzOver = function(e) {
   e.preventDefault();
   document.getElementById('dropzone').style.borderColor = 'rgba(155,69,32,0.7)';
-  document.getElementById('dropzone').style.background = 'rgba(155,69,32,0.03)';
-}
+};
 
-function dzLeave(e) {
+window.dzLeave = function(e) {
   document.getElementById('dropzone').style.borderColor = 'rgba(155,69,32,0.3)';
   document.getElementById('dropzone').style.background = 'transparent';
-}
+};
 
-function dzDrop(e) {
+window.dzDrop = function(e) {
   e.preventDefault();
-  dzLeave(e);
-  filesSelected(e.dataTransfer.files);
-}
+  window.dzLeave(e);
+  window.filesSelected(e.dataTransfer.files);
+};
 
-function filesSelected(files) {
-  const list = document.getElementById('file-list');
+window.filesSelected = function(files) {
+  var list = document.getElementById('file-list');
   list.innerHTML = '';
-  const count = files.length;
-  document.getElementById('dz-label').textContent = count + ' file' + (count !== 1 ? 's' : '') + ' selected';
-  Array.from(files).forEach(f => {
-    const row = document.createElement('div');
-    row.style.cssText = "display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(180,150,100,0.15);font-family:'Playfair Display',serif;font-size:11px;font-style:italic;color:rgba(74,48,32,0.7)";
-    row.innerHTML = '<span style="color:rgba(155,69,32,0.4);font-style:normal">—</span>' + f.name;
+  document.getElementById('dz-label').textContent = files.length + ' file' + (files.length !== 1 ? 's' : '') + ' selected';
+  Array.from(files).forEach(function(f) {
+    var row = document.createElement('div');
+    row.style.cssText = 'padding:7px 0;border-bottom:1px solid rgba(180,150,100,0.15);font-family:serif;font-size:11px;color:rgba(74,48,32,0.7)';
+    row.textContent = f.name;
     list.appendChild(row);
   });
-}
+};
 
-function submitUpload() {
-  const name = document.getElementById('upload-name').value;
-  const email = document.getElementById('upload-email').value;
+window.submitUpload = function() {
+  var name = document.getElementById('upload-name').value;
+  var email = document.getElementById('upload-email').value;
   if (!name || !email) { alert('Please enter your name and email.'); return; }
-  const formData = new FormData();
+  var formData = new FormData();
   formData.append('access_key', '1557bd49-9ee1-4d8f-906d-a87cc178b84e');
   formData.append('name', name);
   formData.append('email', email);
-  formData.append('subject', 'New file upload — A4C');
-  Array.from(document.getElementById('file-input').files).forEach(f => formData.append('file', f));
-  fetch('https://api.web3forms.com/submit', { method:'POST', body:formData })
-    .then(() => { document.getElementById('upload-success').style.display = 'block'; })
-    .catch(() => { document.getElementById('upload-success').style.display = 'b
+  formData.append('subject', 'New file upload - A4C');
+  var files = document.getElementById('file-input').files;
+  Array.from(files).forEach(function(f) { formData.append('file', f); });
+  fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData })
+    .then(function(){ document.getElementById('upload-success').style.display = 'block'; })
+    .catch(function(){ document.getElementById('upload-success').style.display = 'block'; });
+};
+
+document.getElementById('mailbox-modal').addEventListener('click', function(e) {
+  if (e.target === this) window.closeMailbox();
+});
+
+});
+</script>
+</body>
+</html>
