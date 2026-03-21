@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accounting for Creatives</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --desk:#3D2B1F;--desk-light:#4E3728;
+  --leather:#2C1F14;--leather-mid:#5C3D28;
+  --paper:#F5EFD8;--paper-aged:#EDE4C4;
+  --folder-tan:#C8935A;--folder-dark:#A67340;--folder-shadow:#7A4F28;
+  --ink:#1A120A;--ink-mid:#4A3020;--rust:#9B4520;--gold:#B8882A;
+  --cream:#FAF5E8;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--desk);font-family:var(--sans);font-weight:300;color:var(--ink);overflow-x:hidden;min-height:100vh}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:18px 48px;background:rgba(29,18,10,0.93);border-bottom:1px solid rgba(200,147,90,0.15);backdrop-filter:blur(12px)}
+.nav-logo{font-family:var(--serif);font-size:14px;font-weight:400;color:var(--paper);text-decoration:none;line-height:1.2;letter-spacing:0.01em;cursor:pointer}
+.nav-logo span{display:block;font-size:9px;font-family:var(--mono);font-weight:300;letter-spacing:0.16em;color:rgba(245,239,216,0.4);text-transform:uppercase;margin-top:3px}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:10px;font-family:var(--mono);font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,239,216,0.45);text-decoration:none;transition:color 0.2s;cursor:pointer}
+.nav-links a:hover{color:var(--paper)}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ══ DESK PAGE ══ */
+#desk-page{min-height:100vh;background:var(--desk);padding-top:70px;position:relative;overflow:hidden}
+.desk-surface{
+  width:100%;min-height:calc(100vh - 70px);
+  background:var(--leather);position:relative;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.03) 4px);
+}
+.desk-edge{position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(180deg,var(--desk) 0%,var(--desk-light) 100%);z-index:1}
+
+/* ── LETTERHEAD ── */
+.paper-letterhead{position:absolute;top:44px;left:52px;width:310px;background:var(--paper);padding:28px 24px 32px;transform:rotate(-1.8deg);z-index:10;box-shadow:3px 6px 20px rgba(0,0,0,0.5),1px 2px 4px rgba(0,0,0,0.3)}
+.paper-letterhead::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--rust)}
+.lh-firm{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink);line-height:1.2;margin-bottom:4px}
+.lh-firm em{font-style:italic;color:var(--rust)}
+.lh-sub{font-family:var(--mono);font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-mid);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(26,18,10,0.15)}
+.lh-body{font-size:11px;line-height:1.85;color:var(--ink-mid);font-style:italic}
+.lh-body p{margin-bottom:9px}
+.lh-sig{margin-top:18px;font-family:var(--serif);font-size:17px;font-style:italic;color:var(--rust)}
+.lh-sig-sub{font-family:var(--mono);font-size:7.5px;letter-spacing:0.12em;color:var(--ink-mid);text-transform:uppercase;margin-top:2px}
+
+/* ── BUSINESS CARD ── */
+.biz-card{position:absolute;top:44px;right:64px;width:210px;height:124px;background:var(--ink);padding:18px;transform:rotate(2.8deg);z-index:12;box-shadow:2px 5px 18px rgba(0,0,0,0.55)}
+.biz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--rust)}
+.bc-name{font-family:var(--serif);font-size:12.5px;color:var(--paper);line-height:1.3;margin-bottom:5px}
+.bc-title{font-family:var(--mono);font-size:7px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,239,216,0.38);margin-bottom:14px}
+.bc-contact{font-family:var(--mono);font-size:7.5px;color:rgba(245,239,216,0.5);line-height:1.8}
+.bc-accent{position:absolute;bottom:12px;right:14px;font-family:var(--serif);font-size:26px;font-style:italic;color:rgba(155,69,32,0.35)}
+
+/* ── PAPERCLIPS ── */
+.paperclip{position:absolute;z-index:15}
+.paperclip svg{display:block}
+
+/* ── STICKY NOTES ── */
+.sticky{position:absolute;background:#E8DC6A;padding:11px 13px;font-family:var(--mono);font-size:8.5px;line-height:1.7;color:#3A3010;box-shadow:2px 3px 10px rgba(0,0,0,0.3);z-index:8}
+.sticky.pink{background:#F2C4CE}
+.sticky.blue{background:#B8D4E8;color:#1A2A3A}
+
+/* ── RULER ── */
+.ruler{position:absolute;bottom:200px;left:300px;width:240px;height:20px;background:#C8A87A;z-index:7;transform:rotate(-4deg);display:flex;align-items:center;padding:0 7px;box-shadow:1px 2px 6px rgba(0,0,0,0.35)}
+.ruler-marks{display:flex;gap:0;flex:1;align-items:flex-end}
+.ruler-mark{border-left:1px solid rgba(60,30,10,0.4);flex:1;height:5px}
+.ruler-mark:nth-child(5n){border-left-color:rgba(60,30,10,0.7);height:9px}
+.ruler-label{font-family:var(--mono);font-size:6.5px;color:rgba(60,30,10,0.5);letter-spacing:0.1em;margin-left:4px}
+
+/* ── PEN ── */
+.pen{position:absolute;top:195px;left:200px;z-index:9;transform:rotate(-35deg)}
+
+/* ── COFFEE RING ── */
+.coffee-ring{position:absolute;bottom:240px;right:160px;width:80px;height:80px;z-index:5;border-radius:50%;border:3px solid rgba(120,70,30,0.22);box-shadow:inset 0 0 0 7px rgba(100,55,20,0.07),0 0 0 1px rgba(100,55,20,0.08)}
+.coffee-ring::after{content:'';position:absolute;top:4px;left:4px;right:4px;bottom:4px;border-radius:50%;border:1px solid rgba(120,70,30,0.1)}
+
+/* ══ FOLDER ORGANIZER (accordion file stand) ══ */
+.folder-organizer{
+  position:absolute;top:60px;right:300px;z-index:18;
+  width:240px;
+}
+.organizer-base{
+  width:240px;height:18px;
+  background:linear-gradient(180deg,#8B6040 0%,#6A4428 100%);
+  border-radius:2px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  position:relative;
+}
+.organizer-base::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(90deg,transparent 0px,transparent 23px,rgba(0,0,0,0.15) 23px,rgba(0,0,0,0.15) 24px);
+  border-radius:inherit;
+}
+.organizer-dividers{
+  display:flex;align-items:flex-end;gap:0;
+  height:160px;padding:0 4px;
+  border-left:6px solid #6A4428;
+  border-right:6px solid #6A4428;
+  background:rgba(0,0,0,0.15);
+}
+.organizer-slot{
+  flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;
+  border-right:2px solid rgba(106,68,40,0.5);
+  position:relative;
+  padding-bottom:0;
+}
+.organizer-slot:last-child{border-right:none}
+/* Tab sticking up from each slot */
+.slot-tab{
+  position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  width:54px;height:22px;
+  border-radius:4px 4px 0 0;
+  display:flex;align-items:center;justify-content:center;
+}
+.slot-tab span{font-family:var(--mono);font-size:6.5px;letter-spacing:0.1em;text-transform:uppercase;font-weight:400}
+/* Folder shapes inside organizer */
+.slot-folder{
+  width:46px;
+  border-radius:1px 4px 0 0;
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+}
+
+/* ══ DOLLAR BILLS ══ */
+.money{position:absolute;z-index:6}
+.bill{
+  width:130px;height:56px;
+  background:#85A870;
+  border-radius:2px;
+  border:2px solid #6A8A55;
+  position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.bill::before{
+  content:'';position:absolute;inset:4px;
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:1px;
+}
+.bill-inner{
+  font-family:var(--serif);font-size:20px;font-weight:400;font-style:italic;
+  color:rgba(255,255,255,0.35);
+  letter-spacing:-0.02em;
+}
+.bill-serial{
+  position:absolute;top:6px;left:8px;
+  font-family:var(--mono);font-size:5px;letter-spacing:0.08em;
+  color:rgba(255,255,255,0.25);text-transform:uppercase;
+}
+.bill-corner{
+  position:absolute;bottom:5px;right:7px;
+  font-family:var(--mono);font-size:7px;color:rgba(255,255,255,0.2);
+}
+/* Oval on bill */
+.bill-oval{
+  position:absolute;width:36px;height:46px;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:50%;
+}
+
+/* ══ FAX MACHINE ══ */
+.fax{
+  position:absolute;bottom:80px;right:48px;
+  z-index:16;
+  width:170px;
+}
+.fax-body{
+  width:170px;height:120px;
+  background:linear-gradient(180deg,#D8D0C0 0%,#C0B8A8 100%);
+  border-radius:4px 4px 2px 2px;
+  position:relative;
+  box-shadow:2px 6px 20px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.3);
+}
+/* Paper slot */
+.fax-slot{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  width:120px;height:8px;
+  background:#3A3028;
+  border-radius:1px;
+}
+/* Paper coming out */
+.fax-paper{
+  position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  width:100px;height:22px;
+  background:var(--paper);
+  border-radius:1px 1px 0 0;
+  box-shadow:0 -2px 6px rgba(0,0,0,0.2);
+  display:flex;align-items:center;justify-content:center;
+}
+.fax-paper-lines{display:flex;flex-direction:column;gap:3px;padding:4px 8px;width:100%}
+.fax-paper-line{height:1px;background:rgba(26,18,10,0.12);border-radius:1px}
+.fax-paper-line:first-child{width:60%;background:rgba(155,69,32,0.2)}
+/* Display */
+.fax-display{
+  position:absolute;top:26px;left:14px;right:14px;height:26px;
+  background:#2A3820;
+  border-radius:2px;
+  display:flex;align-items:center;padding:0 8px;
+}
+.fax-display-text{font-family:var(--mono);font-size:7px;letter-spacing:0.1em;color:#6ABF69;text-transform:uppercase}
+.fax-display-cursor{width:5px;height:10px;background:#6ABF69;margin-left:3px;animation:blink 1.1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* Buttons */
+.fax-buttons{position:absolute;top:60px;left:14px;display:flex;gap:5px;flex-wrap:wrap;width:80px}
+.fax-btn{width:14px;height:14px;background:#A8A090;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.2)}
+.fax-btn.green{background:#5A8040}
+.fax-btn.red{background:#8B3020}
+/* Speaker */
+.fax-speaker{position:absolute;top:60px;right:14px;width:36px;height:36px;background:#B0A898;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 3px rgba(0,0,0,0.12)}
+.fax-speaker-dot{width:8px;height:8px;border-radius:50%;background:#8A8078}
+.fax-base{width:170px;height:10px;background:linear-gradient(180deg,#B0A898 0%,#9A9288 100%);border-radius:0 0 4px 4px;box-shadow:2px 4px 10px rgba(0,0,0,0.35)}
+.fax-label{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:6px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(60,50,40,0.4);white-space:nowrap}
+
+/* ══ SCATTERED FOLDERS ══ */
+.desk-folder{position:absolute;cursor:pointer;z-index:20;transition:transform 0.25s ease,box-shadow 0.25s ease}
+.desk-folder:hover .df-body{box-shadow:6px 12px 36px rgba(0,0,0,0.65),2px 3px 8px rgba(0,0,0,0.4)}
+.desk-folder:hover{z-index:30}
+.df-body{
+  width:280px;height:186px;
+  border-radius:2px 10px 4px 4px;
+  position:relative;
+  box-shadow:4px 8px 24px rgba(0,0,0,0.55),2px 3px 8px rgba(0,0,0,0.3);
+  transition:box-shadow 0.25s ease;
+}
+.df-body::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(180deg,transparent 0px,transparent 16px,rgba(120,70,20,0.07) 16px,rgba(120,70,20,0.07) 17px);
+  border-radius:inherit;
+}
+.df-tab{
+  position:absolute;top:-22px;left:18px;
+  width:84px;height:24px;
+  border-radius:5px 5px 0 0;
+  display:flex;align-items:center;justify-content:center;
+}
+.df-tab span{font-family:var(--mono);font-size:7px;letter-spacing:0.13em;text-transform:uppercase;font-weight:400}
+.df-spine{position:absolute;left:0;top:0;bottom:0;width:5px;border-radius:4px 0 0 4px;opacity:0.45}
+/* Folder label - mono font */
+.df-label{position:absolute;top:22px;left:22px;right:22px;height:58px;background:var(--paper-aged);border:1px solid rgba(120,70,20,0.2);display:flex;align-items:center;padding:10px 14px}
+.df-label-title{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--ink);line-height:1.3;letter-spacing:0.06em;text-transform:uppercase}
+.df-label-sub{font-family:var(--mono);font-size:7.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-mid);margin-top:4px;opacity:0.6}
+.df-clasp{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;border:2px solid rgba(180,130,40,0.5);display:flex;align-items:center;justify-content:center}
+.df-clasp::after{content:'';width:9px;height:9px;border-radius:50%;background:var(--folder-dark)}
+.df-papers{position:absolute;top:-3px;left:6px;right:6px;height:6px;border-radius:1px;box-shadow:0 -2px 0 rgba(200,180,140,0.35)}
+
+
+/* Folder 1 - Blueprint, tan */
+.df1{bottom:60px;left:50%;transform:translateX(-50%) rotate(-6deg);margin-left:-60px}
+.df1 .df-body{background:#C8935A}
+.df1 .df-tab{background:#C8935A}
+.df1 .df-tab span{color:#7A4F28}
+.df1 .df-spine{background:#7A4F28}
+.df1 .df-clasp{background:var(--gold)}
+.df1 .df-papers{background:var(--paper)}
+.df1:hover{transform:translateX(-50%) rotate(-3deg) translateY(-8px);margin-left:-60px}
+
+/* Folder 2 - Services, amber */
+.df2{bottom:40px;left:50%;transform:translateX(-50%) rotate(5deg);margin-left:100px}
+.df2 .df-body{background:#B07840}
+.df2 .df-tab{background:#B07840;left:24px}
+.df2 .df-tab span{color:#7A4F28}
+.df2 .df-spine{background:#7A4F28}
+.df2 .df-clasp{background:#8B6020}
+.df2 .df-papers{background:#E8D5B8}
+.df2:hover{transform:translateX(-50%) rotate(3deg) translateY(-8px);margin-left:100px}
+
+/* Folder 3 - Intake, brown */
+.df3{bottom:80px;left:50%;transform:translateX(-50%) rotate(-13deg);margin-left:-280px}
+.df3 .df-body{background:#8B6E5A}
+.df3 .df-tab{background:#8B6E5A;left:30px}
+.df3 .df-tab span{color:#4A3028}
+.df3 .df-spine{background:#5C3D2C}
+.df3 .df-clasp{background:#6B4A38}
+.df3 .df-papers{background:#F0E8DC}
+.df3:hover{transform:translateX(-50%) rotate(-10deg) translateY(-8px);margin-left:-280px}
+
+/* CTA row */
+.desk-cta{position:absolute;bottom:20px;left:52px;display:flex;gap:14px;align-items:center;z-index:30}
+
+/* ── MAILBOX ── */
+.mailbox{position:absolute;bottom:80px;left:52px;z-index:22;cursor:pointer;transition:transform 0.2s}
+.mailbox:hover{transform:translateY(-4px)}
+
+/* ── BUTTONS ── */
+.btn-ink{display:inline-block;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;padding:14px 32px;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;text-decoration:none}
+.btn-ink:hover{background:var(--rust);transform:translateY(-1px)}
+.btn-ghost{display:inline-block;background:transparent;color:rgba(245,239,216,0.6);font-family:var(--mono);font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;padding:13px 28px;border:1px solid rgba(245,239,216,0.2);cursor:pointer;transition:all 0.2s;text-decoration:none}
+.btn-ghost:hover{color:var(--paper);border-color:rgba(245,239,216,0.5)}
+.btn-paper{display:inline-block;background:var(--ink);color:var(--paper-aged);font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:13px 28px;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s}
+.btn-paper:hover{background:var(--rust);transform:translateY(-1px)}
+
+/* ══ FOLDER OPEN PAGES ══ */
+.folder-scene{background:var(--leather);min-height:calc(100vh - 70px);padding:48px 40px;background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.03) 4px)}
+.folder-open{display:grid;grid-template-columns:180px 1fr;gap:0;max-width:1160px;margin:0 auto}
+
+.f-flap{position:relative;min-height:800px;border-radius:4px 0 0 4px;box-shadow:-4px 0 20px rgba(0,0,0,0.3);padding:28px 18px}
+.f-flap::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(180deg,transparent 0px,transparent 18px,rgba(120,70,20,0.06) 18px,rgba(120,70,20,0.06) 19px);border-radius:inherit;pointer-events:none}
+.f-flap-tab{position:absolute;top:-26px;left:14px;width:96px;height:28px;border-radius:5px 5px 0 0;display:flex;align-items:center;justify-content:center}
+.f-flap-tab span{font-family:var(--mono);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7}
+.f-flap-title{font-family:var(--serif);font-size:13px;font-style:italic;line-height:1.4;margin-bottom:18px;opacity:0.72;position:relative;z-index:1}
+.f-flap-meta{font-family:var(--mono);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;line-height:2.2;opacity:0.5;position:relative;z-index:1}
+.f-flap-wm{position:absolute;bottom:22px;left:14px;font-family:var(--serif);font-size:26px;font-style:italic;opacity:0.12;z-index:1}
+
+.f-paper{background:var(--paper);min-height:800px;padding:0;position:relative;box-shadow:4px 0 20px rgba(0,0,0,0.3),inset -4px 0 12px rgba(0,0,0,0.08)}
+.f-paper::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(180deg,transparent 0px,transparent 27px,rgba(180,160,120,0.18) 27px,rgba(180,160,120,0.18) 28px);pointer-events:none;z-index:0}
+.f-paper::after{content:'';position:absolute;top:0;left:56px;bottom:0;width:1px;background:rgba(200,100,80,0.18);pointer-events:none;z-index:0}
+.f-paper-inner{position:relative;z-index:1}
+
+/* Paper content styles */
+.p-header{padding:52px 56px 36px 84px;border-bottom:1px solid rgba(155,69,32,0.1)}
+.p-eyebrow{font-family:var(--serif);font-size:11px;font-style:italic;font-weight:400;color:rgba(155,69,32,0.6);margin-bottom:14px;letter-spacing:0.01em}
+.p-title{font-family:var(--serif);font-size:42px;font-weight:400;color:var(--ink);line-height:1.0;letter-spacing:-0.02em}
+.p-title em{font-style:italic;color:var(--rust)}
+.p-sub{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--ink-mid);margin-top:14px;line-height:1.7;max-width:440px;font-weight:400}
+
+/* Bible steps */
+.b-step{display:grid;grid-template-columns:84px 1fr;gap:0;border-bottom:1px solid rgba(180,150,100,0.15)}
+.b-numcol{padding:36px 0 36px 24px;border-right:1px solid rgba(180,150,100,0.12);display:flex;flex-direction:column;align-items:center;gap:8px}
+.b-num{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic;color:rgba(155,69,32,0.25);line-height:1}
+.b-numline{width:1px;flex:1;background:rgba(155,69,32,0.07);min-height:20px}
+.b-body{padding:36px 52px 36px 32px}
+.b-label{font-family:var(--serif);font-size:10px;font-style:italic;color:rgba(155,69,32,0.5);margin-bottom:8px;letter-spacing:0.01em}
+.b-heading{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:12px}
+.b-heading em{font-style:italic}
+.b-text{font-size:12.5px;line-height:1.9;color:var(--ink-mid);margin-bottom:14px;max-width:520px;font-weight:300}
+.b-list{list-style:none;margin-bottom:0}
+.b-list li{font-size:11px;font-family:var(--serif);font-style:italic;color:rgba(74,48,32,0.65);padding:6px 0;border-bottom:1px solid rgba(180,150,100,0.1);display:flex;align-items:baseline;gap:10px}
+.b-list li:last-child{border-bottom:none}
+.b-list li::before{content:'—';color:rgba(155,69,32,0.3);font-size:9px;flex-shrink:0;font-style:normal}
+.b-callout{margin-top:14px;border-left:1px solid rgba(155,69,32,0.3);padding:12px 18px;font-size:12px;font-style:italic;font-family:var(--serif);color:var(--ink-mid);line-height:1.75;background:transparent}
+
+/* Section break */
+.s-break{padding:36px 56px 36px 84px;border-top:1px solid rgba(180,150,100,0.15);border-bottom:1px solid rgba(180,150,100,0.15)}
+.s-break-label{font-family:var(--serif);font-size:10px;font-style:italic;color:rgba(74,48,32,0.35);margin-bottom:6px}
+.s-break-title{font-family:var(--serif);font-size:28px;font-weight:400;color:var(--ink);line-height:1.1}
+.s-break-title em{font-style:italic;color:var(--rust)}
+
+/* Tiers */
+.tiers-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-bottom:1px solid rgba(180,150,100,0.15)}
+.tier{padding:32px 28px;border-right:1px solid rgba(180,150,100,0.15)}
+.tier:last-child{border-right:none}
+.t-num{font-family:var(--serif);font-size:10px;font-style:italic;color:rgba(155,69,32,0.25);margin-bottom:10px}
+.t-name{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink);line-height:1.15;margin-bottom:6px}
+.t-for{font-family:var(--serif);font-size:10px;font-style:italic;color:rgba(155,69,32,0.55);margin-bottom:12px}
+.t-desc{font-size:12px;line-height:1.85;color:var(--ink-mid);margin-bottom:14px;font-weight:300}
+.t-list{list-style:none}
+.t-list li{font-size:10.5px;font-family:var(--serif);font-style:italic;color:rgba(74,48,32,0.6);padding:5px 0;border-bottom:1px solid rgba(180,150,100,0.1);display:flex;gap:8px;align-items:baseline}
+.t-list li:last-child{border-bottom:none}
+.t-list li::before{content:'—';color:rgba(155,69,32,0.25);font-size:9px;font-style:normal}
+.bespoke-row{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid rgba(180,150,100,0.15)}
+.bespoke{padding:32px 28px;border-right:1px solid rgba(180,150,100,0.15)}
+.bespoke:last-child{border-right:none}
+
+/* CTA strip */
+.f-cta{display:flex;gap:14px;align-items:center;padding:32px 52px 32px 84px;border-top:1px solid rgba(180,150,100,0.15)}
+.f-cta-text{font-family:var(--serif);font-size:15px;font-style:italic;color:var(--ink-mid);margin-bottom:5px}
+.f-cta-sub{font-size:11px;font-family:var(--serif);font-style:italic;color:rgba(74,48,32,0.45);max-width:280px;line-height:1.7}
+
+/* Tiers folder flap - amber */
+.flap-amber{background:#B07840}
+.flap-amber .f-flap-tab{background:#B07840}
+.flap-amber .f-flap-tab span,.flap-amber .f-flap-title,.flap-amber .f-flap-meta,.flap-amber .f-flap-wm{color:#7A4F28}
+
+/* Forms folder flap - brown */
+.flap-brown{background:#8B6E5A}
+.flap-brown .f-flap-tab{background:#8B6E5A}
+.flap-brown .f-flap-tab span,.flap-brown .f-flap-title,.flap-brown .f-flap-meta,.flap-brown .f-flap-wm{color:#4A3028}
+
+/* ── FORMS TABS ── */
+.form-tabs{display:flex;border-bottom:1px solid rgba(180,150,100,0.25);padding:0 74px}
+.ftab{font-family:var(--mono);font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;padding:13px 22px 12px;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s}
+.ftab.active{color:var(--rust);border-bottom-color:var(--rust)}
+.ftab.inactive{color:rgba(74,48,32,0.38)}
+
+/* Form fields */
+.pf-wrap{padding:0 74px 48px}
+.pf-section{font-family:var(--mono);font-size:8px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(74,48,32,0.38);margin:26px 0 0;padding-bottom:5px;border-bottom:1px solid rgba(180,150,100,0.18)}
+.pf-row{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+.pf-field{border-bottom:1px solid rgba(180,150,100,0.28);padding:14px 0 10px}
+.pf-field:focus-within{border-bottom-color:var(--rust)}
+.pf-label{display:block;font-family:var(--mono);font-size:8px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(74,48,32,0.45);margin-bottom:5px;transition:color 0.2s}
+.pf-field:focus-within .pf-label{color:var(--rust)}
+.pf-input{width:100%;background:transparent;border:none;outline:none;font-family:var(--sans);font-size:13.5px;font-weight:300;color:var(--ink);padding:2px 0;caret-color:var(--rust)}
+.pf-input::placeholder{color:rgba(74,48,32,0.22)}
+select.pf-input{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234A3020' stroke-opacity='0.32' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 2px center;padding-right:18px}
+textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.check-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid rgba(180,150,100,0.13);cursor:pointer}
+.check-item:nth-child(odd){border-right:1px solid rgba(180,150,100,0.1);padding-right:14px}
+.check-item:nth-child(even){padding-left:14px}
+.check-item input{display:none}
+.check-box{width:13px;height:13px;flex-shrink:0;border:1px solid rgba(74,48,32,0.28);display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.check-item input:checked+.check-box{background:var(--ink);border-color:var(--ink)}
+.check-item input:checked+.check-box::after{content:'✓';color:var(--paper);font-size:8.5px;line-height:1}
+.check-text{font-size:11.5px;color:var(--ink-mid);font-weight:300}
+.pf-submit{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:22px;border-top:1px solid rgba(180,150,100,0.22)}
+.pf-note{font-size:10.5px;color:rgba(74,48,32,0.4);max-width:200px;line-height:1.6;font-style:italic}
+.success-panel{display:none;background:var(--ink);color:var(--paper);padding:22px 26px;margin-top:22px}
+.success-panel.show{display:block}
+.success-panel p{font-family:var(--serif);font-size:15px;font-style:italic}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fadeUp 0.5s ease forwards}
+.fi.d1{animation-delay:0.05s}
+.fi.d2{animation-delay:0.1s}
+.fi.d3{animation-delay:0.16s}
+.fi.d4{animation-delay:0.22s}
+.fi.d5{animation-delay:0.3s}
+.fi.d6{animation-delay:0.38s}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" onclick="showPage('desk')">
+    Accounting for Creatives
+    <span>Est. 2026 — New York, NY — Managed by Real Accountants</span>
+  </a>
+
+</nav>
+
+<!-- ══════════════ DESK ══════════════ -->
+<div id="desk-page" class="page active">
+<div class="desk-surface">
+  <div class="desk-edge"></div>
+
+  <!-- Letterhead -->
+  <div class="paper-letterhead fi">
+    <div class="lh-firm">Accounting<br>for <em>Creatives</em></div>
+    <div class="lh-sub">Est. 2026 — New York, NY</div>
+
+    <!-- Animated handwriting -->
+    <div style="margin-bottom:10px;position:relative">
+      <svg width="254" height="110" viewBox="0 0 254 110" fill="none" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;display:block">
+        <defs>
+          <style>
+            @keyframes hw-fade {
+              0%,2% { opacity:0 } 4% { opacity:1 } 88% { opacity:1 } 96%,100% { opacity:0 }
+            }
+            @keyframes pencil-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)} }
+            .hw-g { animation: hw-fade 11s ease infinite; }
+            .hw-pencil { animation: hw-fade 11s ease infinite, pencil-bob 0.5s ease infinite; }
+          </style>
+        </defs>
+        <g class="hw-g" font-family="'DM Mono', monospace" fill="#4A3020">
+          <!-- line 1 -->
+          <text x="4" y="16" font-size="10" letter-spacing="0.01em" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.01s" begin="0.3s;hw-r.end+1s" fill="freeze" id="hw-t1"/>
+            An accounting firm for creatives,
+          </text>
+          <!-- line 2 -->
+          <text x="4" y="31" font-size="10" letter-spacing="0.01em" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.01s" begin="hw-t1.end+0.6s" fill="freeze" id="hw-t2"/>
+            managed by real accountants.
+          </text>
+          <!-- line 3 -->
+          <text x="4" y="52" font-size="10" letter-spacing="0.01em" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.01s" begin="hw-t2.end+0.6s" fill="freeze" id="hw-t3"/>
+            We handle the books, the filings,
+          </text>
+          <!-- line 4 -->
+          <text x="4" y="67" font-size="10" letter-spacing="0.01em" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.01s" begin="hw-t3.end+0.6s" fill="freeze" id="hw-t4"/>
+            the structure — so you can stay
+          </text>
+          <!-- line 5 -->
+          <text x="4" y="82" font-size="10" letter-spacing="0.01em" opacity="0">
+            <animate attributeName="opacity" from="0" to="1" dur="0.01s" begin="hw-t4.end+0.6s" fill="freeze" id="hw-t5"/>
+            in the work.
+          </text>
+          <!-- rust underline -->
+          <path d="M4 92 Q40 88 80 92 Q100 94 116 90" stroke="#9B4520" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0"
+            stroke-dasharray="120" stroke-dashoffset="120">
+            <animate attributeName="stroke-dashoffset" from="120" to="0" dur="0.6s" begin="hw-t5.end+0.3s" fill="freeze"/>
+            <animate attributeName="opacity" from="0" to="0.45" dur="0.1s" begin="hw-t5.end+0.3s" fill="freeze"/>
+          </path>
+          <!-- loop -->
+          <animate id="hw-r" attributeName="opacity" from="1" to="1" dur="0.01s" begin="hw-t5.end+2.2s"/>
+        </g>
+
+        <!-- Animated pencil — moves down line by line as text appears -->
+        <g class="hw-pencil" transform="translate(190,8)">
+          <!-- animate Y position stepping through each line -->
+          <animateTransform attributeName="transform" type="translate"
+            values="190,8; 190,8; 190,23; 190,23; 190,44; 190,44; 190,59; 190,59; 190,74; 190,74; 190,74"
+            keyTimes="0; 0.04; 0.1; 0.15; 0.25; 0.3; 0.4; 0.45; 0.55; 0.88; 1"
+            dur="11s" repeatCount="indefinite" calcMode="discrete"/>
+          <!-- pencil SVG body at small size -->
+          <rect x="0" y="0" width="38" height="7" rx="1" fill="#E8C84A"/>
+          <rect x="0" y="0" width="38" height="2.5" rx="0.5" fill="rgba(255,255,255,0.18)"/>
+          <!-- eraser end -->
+          <rect x="0" y="1" width="5" height="5" rx="0.5" fill="#D8B888"/>
+          <rect x="5" y="1.5" width="3" height="4" rx="0" fill="#E8B4A8"/>
+          <!-- ferrule near tip -->
+          <rect x="32" y="1" width="3" height="5" rx="0" fill="#C8A870"/>
+          <!-- wood taper -->
+          <path d="M35 1 L41 3.5 L35 6 Z" fill="#D4A870"/>
+          <!-- graphite tip -->
+          <path d="M41 2.8 L44 3.5 L41 4.2 Z" fill="#3A3028"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="lh-sig">A4C</div>
+    <div class="lh-sig-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="046c6168686b446530672a777071606d6b">[email&#160;protected]</a></div>
+  </div>
+
+  <!-- Business card -->
+  <div class="biz-card fi d1">
+    <div class="bc-name">Accounting<br>for Creatives</div>
+    <div class="bc-title">Financial Practice for the Arts</div>
+    <div class="bc-contact"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="39515c55555679580d5a174a4d4c5d5056">[email&#160;protected]</a><br>Lower East Side, New York<br>By appointment only</div>
+    <div class="bc-accent">A</div>
+  </div>
+
+  <!-- Paperclip 1 - on letterhead top right corner -->
+  <div class="paperclip fi d1" style="top:56px;left:348px;transform:rotate(-20deg)">
+    <svg width="22" height="44" viewBox="0 0 22 44" fill="none">
+      <path d="M11 2 C5 2 2 6 2 11 L2 36 C2 40 5 42 9 42 C13 42 16 40 16 36 L16 14 C16 11 14 9 11 9 C8 9 6 11 6 14 L6 34" stroke="#8BA0B0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+
+
+
+  <!-- Paperclip 4 - on biz card -->
+  <div class="paperclip fi d1" style="top:50px;right:220px;transform:rotate(12deg)">
+    <svg width="16" height="32" viewBox="0 0 22 44" fill="none">
+      <path d="M11 2 C5 2 2 6 2 11 L2 36 C2 40 5 42 9 42 C13 42 16 40 16 36 L16 14 C16 11 14 9 11 9 C8 9 6 11 6 14 L6 34" stroke="#C8A050" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Sticky notes -->
+  <div class="sticky fi d2" style="bottom:320px;left:440px;width:124px;transform:rotate(1.5deg)">
+    call back<br>M. Rodriguez<br>re: LLC setup<br>✓ Q2 open
+  </div>
+  <div class="sticky pink fi d3" style="top:210px;right:310px;width:116px;transform:rotate(-2.8deg)">
+    review grant<br>compliance<br>before Apr 15
+  </div>
+  <div class="sticky blue fi d3" style="bottom:300px;right:240px;width:110px;transform:rotate(2.2deg)">
+    fax to IRS<br>form 2553<br>asap!!
+  </div>
+
+  <!-- Ruler -->
+  <div class="ruler fi d3">
+    <div class="ruler-marks">
+      <div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div>
+      <div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div>
+      <div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div>
+      <div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div>
+      <div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div><div class="ruler-mark"></div>
+    </div>
+    <span class="ruler-label">in</span>
+  </div>
+
+  <!-- Pencil -->
+  <div class="pen fi d2">
+    <svg width="160" height="14" viewBox="0 0 160 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(-1)">
+      <!-- Eraser ferrule -->
+      <rect x="0" y="2" width="14" height="10" rx="1" fill="#B8A090"/>
+      <rect x="3" y="2" width="1.5" height="10" fill="rgba(0,0,0,0.08)"/>
+      <rect x="6" y="2" width="1.5" height="10" fill="rgba(0,0,0,0.08)"/>
+      <!-- Eraser -->
+      <rect x="14" y="3" width="10" height="8" rx="1" fill="#E8B4A8"/>
+      <!-- Body -->
+      <rect x="24" y="1" width="112" height="12" fill="#E8C84A"/>
+      <rect x="24" y="1" width="112" height="4" fill="rgba(255,255,255,0.12)"/>
+      <!-- Body stripe -->
+      <rect x="24" y="5.5" width="112" height="1" fill="rgba(0,0,0,0.06)"/>
+      <!-- Ferrule at tip -->
+      <rect x="136" y="2" width="8" height="10" rx="0" fill="#C8A870"/>
+      <rect x="138" y="2" width="1" height="10" fill="rgba(0,0,0,0.12)"/>
+      <rect x="141" y="2" width="1" height="10" fill="rgba(0,0,0,0.12)"/>
+      <!-- Wood taper -->
+      <path d="M144 2 L155 7 L144 12 Z" fill="#D4A870"/>
+      <!-- Graphite tip -->
+      <path d="M155 5.5 L160 7 L155 8.5 Z" fill="#3A3028"/>
+    </svg>
+  </div>
+
+  <!-- Coffee ring -->
+  <div class="coffee-ring fi d3"></div>
+
+
+
+
+
+
+
+  <!-- ══ THREE SCATTERED FOLDERS ══ -->
+
+  <!-- Folder 1: Blueprint (center, tilted left) -->
+  <div class="desk-folder df1 fi d4" onclick="showPage('folder')">
+    <div class="df-papers" style="background:var(--paper)"></div>
+    <div class="df-body">
+      <div class="df-tab"><span style="color:#7A4F28;font-family:'Playfair Display',serif;font-style:italic;font-size:8px;letter-spacing:0.04em;text-transform:none">Blueprint</span></div>
+      <div class="df-spine" style="background:#7A4F28"></div>
+      <div class="df-label">
+        <div>
+          <div class="df-label-title">The Blueprint</div>
+          <div class="df-label-sub">How to Form Your LLC</div>
+        </div>
+      </div>
+      <div class="df-clasp" style="background:var(--gold)"></div>
+    </div>
+  </div>
+
+  <!-- Folder 2: Services (right, tilted right) -->
+  <div class="desk-folder df2 fi d5" onclick="showPage('tiers')">
+    <div class="df-papers" style="background:#E8D5B8"></div>
+    <div class="df-body">
+      <div class="df-tab" style="left:24px"><span style="color:#7A4F28;font-family:'Playfair Display',serif;font-style:italic;font-size:8px;letter-spacing:0.04em;text-transform:none">Services</span></div>
+      <div class="df-spine" style="background:#7A4F28"></div>
+      <div class="df-label" style="background:#EDE4C4">
+        <div>
+          <div class="df-label-title">How We Work</div>
+          <div class="df-label-sub">Engagement Tiers</div>
+        </div>
+      </div>
+      <div class="df-clasp" style="background:#8B6020"></div>
+    </div>
+  </div>
+
+  <!-- Folder 3: Intake (left, tilted hard) -->
+  <div class="desk-folder df3 fi d6" onclick="showPage('forms')">
+    <div class="df-papers" style="background:#F0E8DC"></div>
+    <div class="df-body">
+      <div class="df-tab" style="left:28px"><span style="color:#4A3028;font-family:'Playfair Display',serif;font-style:italic;font-size:8px;letter-spacing:0.04em;text-transform:none">Intake</span></div>
+      <div class="df-spine" style="background:#5C3D2C"></div>
+      <div class="df-label" style="background:#F0E8DC">
+        <div>
+          <div class="df-label-title">New Client</div>
+          <div class="df-label-sub">Forms & Contact</div>
+        </div>
+      </div>
+      <div class="df-clasp" style="background:#6B4A38"></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="desk-cta">
+    <button class="btn-ink" onclick="showPage('forms')">Begin Client Intake</button>
+  </div>
+
+  <!-- ══ MAILBOX ══ -->
+  <div class="mailbox fi d5" onclick="openMailbox()">
+    <svg width="90" height="110" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Post -->
+      <rect x="41" y="72" width="8" height="36" rx="1" fill="#6A4428"/>
+      <rect x="41" y="72" width="3" height="36" fill="rgba(0,0,0,0.12)"/>
+      <!-- Box body -->
+      <rect x="8" y="22" width="74" height="52" rx="4" fill="#B85020"/>
+      <rect x="8" y="22" width="74" height="52" rx="4" fill="url(#mailbox-shade)" opacity="0.3"/>
+      <!-- Box top dome -->
+      <path d="M8 38 Q8 22 45 22 Q82 22 82 38" fill="#C86030"/>
+      <!-- Mail slot -->
+      <rect x="22" y="54" width="46" height="5" rx="2" fill="#1A0A04"/>
+      <rect x="22" y="54" width="46" height="2" rx="1" fill="rgba(0,0,0,0.3)"/>
+      <!-- Flag -->
+      <rect x="72" y="30" width="3" height="28" rx="1" fill="#8B4018"/>
+      <rect x="75" y="30" width="14" height="10" rx="1" fill="#C8A050"/>
+      <rect x="75" y="30" width="14" height="3" fill="rgba(255,255,255,0.2)"/>
+      <!-- Hinge details -->
+      <circle cx="18" cy="44" r="3" fill="#8B4018"/>
+      <circle cx="72" cy="44" r="3" fill="#8B4018"/>
+      <!-- Shine -->
+      <path d="M14 28 Q45 24 76 28" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Label -->
+      <rect x="24" y="34" width="42" height="14" rx="2" fill="var(--paper-aged)" opacity="0.9"/>
+      <text x="45" y="44" text-anchor="middle" font-family="'Playfair Display',serif" font-size="6" font-style="italic" fill="#4A3020">drop files</text>
+      <defs>
+        <linearGradient id="mailbox-shade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="white"/>
+          <stop offset="100%" stop-color="black"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div style="font-family:'Playfair Display',serif;font-size:8px;font-style:italic;color:rgba(200,147,90,0.5);text-align:center;margin-top:2px;letter-spacing:0.04em">click to upload</div>
+  </div>
+
+  <!-- ══ UPLOAD MODAL ══ -->
+  <div id="mailbox-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(20,12,6,0.75);align-items:center;justify-content:center">
+    <div style="background:var(--paper);width:480px;max-width:90vw;position:relative;box-shadow:8px 16px 48px rgba(0,0,0,0.6)">
+      <!-- Red top stripe -->
+      <div style="height:4px;background:var(--rust);width:100%"></div>
+      <!-- Ruled lines -->
+      <div style="position:absolute;top:4px;left:0;right:0;bottom:0;background:repeating-linear-gradient(180deg,transparent 0px,transparent 27px,rgba(180,160,120,0.15) 27px,rgba(180,160,120,0.15) 28px);pointer-events:none"></div>
+      <div style="position:absolute;top:4px;left:52px;bottom:0;width:1px;background:rgba(200,100,80,0.15);pointer-events:none"></div>
+      <div style="position:relative;z-index:1;padding:36px 40px 36px 68px">
+        <!-- Close -->
+        <button onclick="closeMailbox()" style="position:absolute;top:16px;right:20px;background:none;border:none;cursor:pointer;font-family:var(--serif);font-size:18px;color:var(--ink-mid);line-height:1">×</button>
+        <div style="font-family:var(--serif);font-size:9px;font-style:italic;color:rgba(155,69,32,0.55);margin-bottom:10px;letter-spacing:0.02em">Client file drop</div>
+        <div style="font-family:var(--serif);font-size:28px;font-weight:400;color:var(--ink);line-height:1.1;margin-bottom:6px">Upload <em style="font-style:italic;color:var(--rust)">your files</em></div>
+        <div style="font-family:var(--serif);font-size:12px;font-style:italic;color:var(--ink-mid);margin-bottom:28px;line-height:1.7">Tax documents, contracts, bank statements — anything you'd like us to review. All files are handled securely.</div>
+
+        <!-- Name field -->
+        <div style="border-bottom:1px solid rgba(180,150,100,0.3);padding:12px 0 10px;margin-bottom:0">
+          <label style="display:block;font-family:var(--serif);font-size:9px;font-style:italic;color:rgba(74,48,32,0.45);margin-bottom:5px">Your name</label>
+          <input type="text" placeholder="Full name" style="width:100%;background:transparent;border:none;outline:none;font-family:var(--sans);font-size:13px;font-weight:300;color:var(--ink);caret-color:var(--rust)" id="upload-name">
+        </div>
+        <div style="border-bottom:1px solid rgba(180,150,100,0.3);padding:12px 0 10px;margin-bottom:24px">
+          <label style="display:block;font-family:var(--serif);font-size:9px;font-style:italic;color:rgba(74,48,32,0.45);margin-bottom:5px">Your email</label>
+          <input type="email" placeholder="so we know where to send a confirmation" style="width:100%;background:transparent;border:none;outline:none;font-family:var(--sans);font-size:13px;font-weight:300;color:var(--ink);caret-color:var(--rust)" id="upload-email">
+        </div>
+
+        <!-- Drop zone -->
+        <div id="dropzone" onclick="document.getElementById('file-input').click()" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)"
+          style="border:1px dashed rgba(155,69,32,0.3);padding:32px 20px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:16px">
+          <div style="font-family:var(--serif);font-size:28px;font-style:italic;color:rgba(155,69,32,0.2);margin-bottom:8px;line-height:1">✦</div>
+          <div style="font-family:var(--serif);font-size:13px;font-style:italic;color:var(--ink-mid)" id="dz-label">Drag files here, or click to browse</div>
+          <div style="font-family:var(--serif);font-size:10px;font-style:italic;color:rgba(74,48,32,0.35);margin-top:6px">PDF, JPG, PNG, XLSX, CSV accepted</div>
+          <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.xlsx,.csv,.doc,.docx" style="display:none" onchange="filesSelected(this.files)">
+        </div>
+
+        <!-- File list -->
+        <div id="file-list" style="margin-bottom:20px;max-height:120px;overflow-y:auto"></div>
+
+        <!-- Submit -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid rgba(180,150,100,0.2)">
+          <div style="font-family:var(--serif);font-size:10px;font-style:italic;color:rgba(74,48,32,0.4);max-width:180px;line-height:1.6">Files go directly to our team.</div>
+          <button onclick="submitUpload()" class="btn-paper">Send to A4C</button>
+        </div>
+        <div id="upload-success" style="display:none;margin-top:16px;padding:16px 20px;background:var(--ink)">
+          <p style="font-family:var(--serif);font-size:14px;font-style:italic;color:var(--paper)">Received. We'll be in touch shortly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════ BLUEPRINT FOLDER PAGE ══════════════ -->
+<div id="folder-page" class="page">
+<div class="folder-scene">
+<div style="max-width:1160px;margin:0 auto">
+<div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('desk')">← Back to desk</button></div>
+<div class="folder-open">
+
+  <div class="f-flap" style="background:#C8935A">
+    <div class="f-flap-tab" style="background:#C8935A"><span style="color:#7A4F28">Blueprint</span></div>
+    <div style="position:relative;z-index:1">
+      <div class="f-flap-title" style="color:#7A4F28">The Blueprint<br>Folder</div>
+      <div class="f-flap-meta" style="color:#7A4F28">LLC Guide<br>& Services<br>────────<br>A4C-2025<br>────────<br>For artists<br>& makers<br>────────<br>Updated<br>Q1 2025</div>
+    </div>
+    <div class="f-flap-wm" style="color:#7A4F28">A4C</div>
+  </div>
+
+  <div class="f-paper">
+  <div class="f-paper-inner">
+
+    <div class="p-header">
+      <div class="p-eyebrow">The Creative's LLC Bible</div>
+      <div class="p-title">How to Form<br>Your <em>LLC</em></div>
+      <div class="p-sub">A start-to-finish guide for artists, musicians, designers, and independent creatives who are ready to build something that lasts.</div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">1</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Foundation</div>
+        <div class="b-heading">Decide <em>why</em> you need an LLC</div>
+        <div class="b-text">Before you file anything, get clear on your reason. An LLC isn't just paperwork — it's a decision to treat your creative practice like a business. The most common reasons artists form one: liability protection (your personal assets stay separate from your business debts), tax flexibility (you choose how you're taxed), and legitimacy (galleries, labels, and clients take you more seriously).</div>
+        <ul class="b-list">
+          <li>You're earning money from your art, even inconsistently</li>
+          <li>You sign contracts, license work, or take commissions</li>
+          <li>You want to open a business bank account</li>
+          <li>You have collaborators or employees</li>
+          <li>You're applying for grants or residencies</li>
+        </ul>
+        <div class="b-callout">A sole proprietorship means you and your business are legally the same person. An LLC creates a wall between them. That wall matters the moment something goes wrong.</div>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">2</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Naming</div>
+        <div class="b-heading">Choose your <em>LLC name</em></div>
+        <div class="b-text">Your LLC name must be unique in your state and include "LLC" or "Limited Liability Company." You can operate under a DBA if you don't want your legal entity name on everything. Many artists form under their own name (e.g., "Maya Chen LLC") and do business as their studio or brand name.</div>
+        <ul class="b-list">
+          <li>Search your state's business name database for conflicts</li>
+          <li>Check federal trademark records at USPTO.gov</li>
+          <li>Secure the matching domain name and social handles</li>
+          <li>If using a DBA, file a separate fictitious business name registration</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">3</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Registered Agent</div>
+        <div class="b-heading">Appoint a <em>registered agent</em></div>
+        <div class="b-text">Every LLC needs a registered agent — a person or service with a physical address in your state who can receive legal documents on your behalf. You can be your own registered agent, but it means your address becomes public record. Most creatives use a service ($50–$150/year) to keep their home address private.</div>
+        <ul class="b-list">
+          <li>Must have a physical street address in your state (no P.O. boxes)</li>
+          <li>Must be available during business hours to receive documents</li>
+          <li>Registered agent services: Northwest, ZenBusiness, Incfile</li>
+        </ul>
+        <div class="b-callout">If you tour, travel, or move frequently — which many artists do — a registered agent service is almost always worth it.</div>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">4</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Filing</div>
+        <div class="b-heading">File your <em>Articles of Organization</em></div>
+        <div class="b-text">This is the official state filing that creates your LLC. You submit it to your state's Secretary of State office along with a filing fee. Most states process online. The document is short — usually just your LLC name, registered agent, and whether it's member-managed or manager-managed.</div>
+        <ul class="b-list">
+          <li>Filing fees vary by state: $50 (Kentucky) to $500 (Massachusetts)</li>
+          <li>New York requires additional publication in local newspapers — budget $1,000+</li>
+          <li>Processing time: same-day to 4 weeks depending on state</li>
+          <li>Keep a copy of your approved Articles — you'll need it to open a bank account</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">5</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Operating Agreement</div>
+        <div class="b-heading">Write your <em>Operating Agreement</em></div>
+        <div class="b-text">This is the internal rulebook for your LLC. Most states don't require it — but you absolutely should have one. It defines who owns the company, how decisions get made, what happens if a member leaves, and how profits are distributed. For a single-member LLC, it still matters: it reinforces that you and the LLC are separate entities.</div>
+        <ul class="b-list">
+          <li>Define ownership percentages and capital contributions</li>
+          <li>Outline how profits and losses are allocated</li>
+          <li>Specify voting rights and decision-making process</li>
+          <li>Include buy-sell provisions for multi-member LLCs</li>
+          <li>Address what happens upon death, disability, or departure of a member</li>
+        </ul>
+        <div class="b-callout">For creatives in bands, collectives, or studio partnerships: this document is how you avoid a lawsuit later. Put it in writing before the money comes in.</div>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">6</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Tax Identity</div>
+        <div class="b-heading">Get your <em>EIN</em></div>
+        <div class="b-text">Your Employer Identification Number (EIN) is your LLC's tax ID — like a Social Security number for your business. You need it to open a business bank account, hire contractors, and file certain taxes. It's free and takes about 15 minutes on the IRS website. Do not pay a third party for this.</div>
+        <ul class="b-list">
+          <li>Apply free at IRS.gov — do not use paid services for this step</li>
+          <li>Single-member LLCs can use their EIN or SSN (EIN is better practice)</li>
+          <li>You'll get it instantly online during business hours</li>
+          <li>Save your EIN confirmation letter — it never expires but can be hard to replace</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">7</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Banking</div>
+        <div class="b-heading">Open a <em>business bank account</em></div>
+        <div class="b-text">This is non-negotiable. The entire legal protection of your LLC depends on keeping your business money separate from your personal money. Commingling funds — using your personal account for business, or vice versa — is called "piercing the corporate veil," and it can make your LLC protection worthless in court.</div>
+        <ul class="b-list">
+          <li>Bring: Articles of Organization, EIN letter, government ID</li>
+          <li>Consider online banks (Mercury, Relay) — no monthly fees, built for creatives</li>
+          <li>Set up a separate savings account for taxes (25–30% of every payment)</li>
+          <li>Never pay personal expenses from the business account</li>
+        </ul>
+        <div class="b-callout">The tax savings account is the single most important financial habit you can build. Creative income is irregular — setting aside tax money the moment it arrives will save you every April.</div>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">8</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Tax Election</div>
+        <div class="b-heading">Choose how you'll be <em>taxed</em></div>
+        <div class="b-text">By default, a single-member LLC is taxed as a sole proprietor (Schedule C). A multi-member LLC is taxed as a partnership. But you can elect S-Corp taxation — and for many creatives earning above $60–80k, this can save significant self-employment tax. This decision has real financial consequences. Get advice before filing anything.</div>
+        <ul class="b-list">
+          <li>Default: pass-through taxation (profits taxed on your personal return)</li>
+          <li>S-Corp election: can reduce self-employment tax on distributions</li>
+          <li>S-Corp requires running payroll and paying yourself a "reasonable salary"</li>
+          <li>Deadline to elect S-Corp status: March 15 for the current tax year</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="b-step">
+      <div class="b-numcol"><div class="b-num">9</div><div class="b-numline"></div></div>
+      <div class="b-body">
+        <div class="b-label">Ongoing Compliance</div>
+        <div class="b-heading">Keep it <em>alive</em></div>
+        <div class="b-text">Forming the LLC is step one. Keeping it in good standing is the job that never ends. Most states require annual reports and fees. Miss them and your LLC can be administratively dissolved — which means you lose your liability protection retroactively.</div>
+        <ul class="b-list">
+          <li>File your state's annual report on time, every year</li>
+          <li>Pay quarterly estimated federal and state taxes (Jan, Apr, Jun, Sep)</li>
+          <li>Keep your registered agent information current</li>
+          <li>Maintain a separate business credit card to track deductible expenses</li>
+          <li>Track every expense — materials, software, travel, studio rent, education</li>
+          <li>Issue 1099s to contractors you pay over $600/year by January 31</li>
+        </ul>
+        <div class="b-callout">The creative deductions most artists miss: home studio square footage, reference books and music, professional development, travel to openings and shows, photography of your work, and website/platform fees.</div>
+      </div>
+    </div>
+
+    <div class="s-break">
+      <div class="s-break-label">How we can help</div>
+      <div class="s-break-title">Choose your <em>engagement</em></div>
+      <div style="font-size:12px;line-height:1.8;color:var(--ink-mid);margin-top:8px;max-width:460px">We handle the ongoing complexity so you can stay in the work. Open the Services folder for engagement tiers, or reach out directly.</div>
+    </div>
+
+    <div class="f-cta">
+      <div>
+        <div class="f-cta-text">Ready to begin?</div>
+        <div class="f-cta-sub">We accept a limited number of new clients each quarter. Pricing discussed directly.</div>
+      </div>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <button class="btn-paper" onclick="showPage('forms')">New Client Intake</button>
+        <button onclick="showPage('tiers')" style="background:transparent;color:var(--rust);font-family:var(--mono);font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;padding:12px 22px;border:1px solid rgba(155,69,32,0.3);cursor:pointer;transition:all 0.2s">View Services</button>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════ TIERS PAGE ══════════════ -->
+<div id="tiers-page" class="page">
+<div class="folder-scene">
+<div style="max-width:1160px;margin:0 auto">
+<div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('desk')">← Back to desk</button></div>
+<div class="folder-open">
+
+  <div class="f-flap flap-amber">
+    <div class="f-flap-tab flap-amber"><span>Services</span></div>
+    <div style="position:relative;z-index:1">
+      <div class="f-flap-title">How We<br>Work</div>
+      <div class="f-flap-meta">Engagement<br>Tiers<br>────────<br>A4C-2025<br>────────<br>No pricing<br>listed here<br>────────<br>Discuss<br>directly</div>
+    </div>
+    <div class="f-flap-wm">A4C</div>
+  </div>
+
+  <div class="f-paper">
+  <div class="f-paper-inner">
+
+    <div class="p-header">
+      <div class="p-eyebrow">Engagement Tiers</div>
+      <div class="p-title">How we <em>work</em></div>
+      <div class="p-sub">We don't post pricing — every creative's situation is different. These tiers describe the scope of what we do. We talk numbers in person.</div>
+    </div>
+
+    <div class="tiers-grid">
+      <div class="tier">
+        <div class="t-num">01</div>
+        <div class="t-name">Solo Practice</div>
+        <div class="t-for">For individual artists</div>
+        <div class="t-desc">The foundation. For freelancers and independent artists who operate alone but need to think like a business.</div>
+        <ul class="t-list">
+          <li>Annual tax preparation & filing</li>
+          <li>Quarterly estimated taxes</li>
+          <li>Self-employment deduction strategy</li>
+          <li>Single-entity bookkeeping</li>
+          <li>Year-end review call</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="t-num">02</div>
+        <div class="t-name">Studio Edition</div>
+        <div class="t-for">For collectives & studios</div>
+        <div class="t-desc">For creative studios, bands, and small production companies managing multiple projects and collaborators.</div>
+        <ul class="t-list">
+          <li>Everything in Solo Practice</li>
+          <li>Multi-entity accounting</li>
+          <li>Project-based P&L tracking</li>
+          <li>Contractor & 1099 management</li>
+          <li>Royalty & licensing income</li>
+          <li>Grant & residency compliance</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="t-num">03</div>
+        <div class="t-name">Archive Plan</div>
+        <div class="t-for">Full-service advisory</div>
+        <div class="t-desc">For established artists who need ongoing CFO-level attention and long-term financial architecture.</div>
+        <ul class="t-list">
+          <li>Everything in Studio Edition</li>
+          <li>Fractional CFO advisory</li>
+          <li>Tour & exhibition budgeting</li>
+          <li>Intellectual property planning</li>
+          <li>Estate & legacy planning</li>
+          <li>Bi-monthly strategy calls</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bespoke-row">
+      <div class="bespoke">
+        <div class="t-num">04</div>
+        <div class="t-name">The Audit Session</div>
+        <div class="t-for">One-time — no commitment required</div>
+        <div class="t-desc">A single deep-dive into your financial situation. We review what you have, identify what's missing, and hand you a clear roadmap. A good first step before committing to anything ongoing.</div>
+      </div>
+      <div class="bespoke">
+        <div class="t-num">05</div>
+        <div class="t-name">Bespoke Engagement</div>
+        <div class="t-for">Custom scope, built around you</div>
+        <div class="t-desc">Navigating a record deal, launching a nonprofit arts org, closing an estate, unwinding a partnership? We design the engagement around the situation — not the other way around.</div>
+      </div>
+    </div>
+
+    <div class="f-cta">
+      <div>
+        <div class="f-cta-text">Not sure which fits?</div>
+        <div class="f-cta-sub">The intake form helps us understand your situation. We'll suggest what makes sense from there.</div>
+      </div>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <button class="btn-paper" onclick="showPage('forms')">Client Intake & Contact</button>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════ FORMS PAGE ══════════════ -->
+<div id="forms-page" class="page">
+<div class="folder-scene">
+<div style="max-width:1160px;margin:0 auto">
+<div style="margin-bottom:24px"><button class="btn-ghost" onclick="showPage('desk')">← Back to desk</button></div>
+<div class="folder-open">
+
+  <div class="f-flap flap-brown">
+    <div class="f-flap-tab flap-brown"><span>Intake</span></div>
+    <div style="position:relative;z-index:1">
+      <div class="f-flap-title">New Client<br>Intake</div>
+      <div class="f-flap-meta">Forms &<br>Contact<br>────────<br>A4C-2025<br>────────<br>Response<br>within 2<br>business<br>days</div>
+    </div>
+    <div class="f-flap-wm">A4C</div>
+  </div>
+
+  <div class="f-paper">
+  <div class="f-paper-inner">
+
+    <div class="p-header">
+      <div class="p-eyebrow">New Client</div>
+      <div class="p-title">Begin your <em>intake</em></div>
+      <div class="p-sub">Tell us about your practice — the work, the income, the complexity. This form is the beginning of a conversation.</div>
+    </div>
+
+    <!-- INTAKE PANEL -->
+    <div id="fpanel-intake" class="pf-wrap">
+      <form action="https://formspree.io/f/mpqynnej" method="POST" onsubmit="submitForm(event,'s-intake')">
+        <div class="pf-section">Personal</div>
+        <div class="pf-row">
+          <div class="pf-field"><label class="pf-label">First Name</label><input class="pf-input" type="text" placeholder="Given name" required></div>
+          <div class="pf-field"><label class="pf-label">Last Name</label><input class="pf-input" type="text" placeholder="Family name" required></div>
+        </div>
+        <div class="pf-field"><label class="pf-label">Email</label><input class="pf-input" type="email" placeholder="your@email.com" required></div>
+        <div class="pf-row">
+          <div class="pf-field"><label class="pf-label">Phone (optional)</label><input class="pf-input" type="tel" placeholder="+1 (000) 000-0000"></div>
+          <div class="pf-field"><label class="pf-label">City / Location</label><input class="pf-input" type="text" placeholder="Where you're based"></div>
+        </div>
+        <div class="pf-section">Your Practice</div>
+        <div class="pf-row">
+          <div class="pf-field">
+            <label class="pf-label">Discipline</label>
+            <select class="pf-input" required>
+              <option value="" disabled selected>Primary discipline</option>
+              <option>Visual Artist / Fine Art</option>
+              <option>Musician / Composer</option>
+              <option>Writer / Author</option>
+              <option>Graphic Designer / Illustrator</option>
+              <option>Filmmaker / Video Artist</option>
+              <option>Photographer</option>
+              <option>Fashion / Textile Designer</option>
+              <option>Dancer / Choreographer</option>
+              <option>Creative Director</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">Years in Practice</label>
+            <select class="pf-input">
+              <option value="" disabled selected>How long?</option>
+              <option>Less than 1 year</option>
+              <option>1–3 years</option>
+              <option>3–7 years</option>
+              <option>7–15 years</option>
+              <option>15+ years</option>
+            </select>
+          </div>
+        </div>
+        <div class="pf-field">
+          <label class="pf-label">Business Structure</label>
+          <select class="pf-input">
+            <option value="" disabled selected>How are you set up?</option>
+            <option>Sole proprietor (no entity)</option>
+            <option>Single-member LLC</option>
+            <option>Multi-member LLC / Partnership</option>
+            <option>S-Corp</option>
+            <option>C-Corp</option>
+            <option>Nonprofit</option>
+            <option>I don't know</option>
+          </select>
+        </div>
+        <div class="pf-section">Income Streams — check all that apply</div>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Commissions / direct sales</span></label>
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Licensing & royalties</span></label>
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Grants & fellowships</span></label>
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Freelance / contract work</span></label>
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Teaching & workshops</span></label>
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Gallery / label income</span></label>
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Tour / exhibition fees</span></label>
+          <label class="check-item"><input type="checkbox"><span class="check-box"></span><span class="check-text">Digital / streaming</span></label>
+        </div>
+        <div class="pf-section">Tell Us More</div>
+        <div class="pf-field">
+          <label class="pf-label">Annual Revenue Range</label>
+          <select class="pf-input">
+            <option value="" disabled selected>Approximate gross income</option>
+            <option>Under $30,000</option>
+            <option>$30,000 – $75,000</option>
+            <option>$75,000 – $150,000</option>
+            <option>$150,000 – $300,000</option>
+            <option>$300,000+</option>
+            <option>Prefer not to say</option>
+          </select>
+        </div>
+        <div class="pf-field">
+          <label class="pf-label">What brings you here?</label>
+          <textarea class="pf-input" rows="5" placeholder="Tell us what's going on — a new project, a financial mess, a transition, or just a need for structure. No judgment, just context."></textarea>
+        </div>
+        <div class="pf-field">
+          <label class="pf-label">How did you find us?</label>
+          <input class="pf-input" type="text" placeholder="Word of mouth, social, search...">
+        </div>
+        <div class="pf-submit">
+          <p class="pf-note">We review every submission personally and respond within two business days.</p>
+          <button type="submit" class="btn-paper">Submit Intake</button>
+        </div>
+      </form>
+      <div id="s-intake" class="success-panel"><p>Thank you. We've received your intake and will be in touch within two business days.</p></div>
+    </div>
+
+
+
+  </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(id + '-page');
+  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+}
+
+function loopNotepad() {
+  const anims = document.querySelectorAll('#desk-page svg animate');
+  anims.forEach(a => { a.beginElement && a.beginElement(); });
+}
+setInterval(loopNotepad, 5200);
+
+function submitForm(e, sid) {
+  e.preventDefault();
+  e.target.style.display = 'none';
+  document.getElementById(sid).classList.add('show');
+}
+
+function openMailbox() {
+  const m = document.getElementById('mailbox-modal');
+  m.style.display = 'flex';
+}
+
+function closeMailbox() {
+  document.getElementById('mailbox-modal').style.display = 'none';
+  document.getElementById('upload-success').style.display = 'none';
+  document.getElementById('file-list').innerHTML = '';
+  document.getElementById('dz-label').textContent = 'Drag files here, or click to browse';
+  document.getElementById('file-input').value = '';
+}
+
+function dzOver(e) {
+  e.preventDefault();
+  document.getElementById('dropzone').style.borderColor = 'rgba(155,69,32,0.7)';
+  document.getElementById('dropzone').style.background = 'rgba(155,69,32,0.03)';
+}
+
+function dzLeave(e) {
+  document.getElementById('dropzone').style.borderColor = 'rgba(155,69,32,0.3)';
+  document.getElementById('dropzone').style.background = 'transparent';
+}
+
+function dzDrop(e) {
+  e.preventDefault();
+  dzLeave(e);
+  filesSelected(e.dataTransfer.files);
+}
+
+function filesSelected(files) {
+  const list = document.getElementById('file-list');
+  list.innerHTML = '';
+  const count = files.length;
+  document.getElementById('dz-label').textContent = count + ' file' + (count !== 1 ? 's' : '') + ' selected';
+  Array.from(files).forEach(f => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(180,150,100,0.15);font-family:\'Playfair Display\',serif;font-size:11px;font-style:italic;color:rgba(74,48,32,0.7)';
+    row.innerHTML = '<span style="color:rgba(155,69,32,0.4);font-style:normal">—</span>' + f.name;
+    list.appendChild(row);
+  });
+}
+
+function submitUpload() {
+  const name = document.getElementById('upload-name').value;
+  const email = document.getElementById('upload-email').value;
+  if (!name || !email) { alert('Please enter your name and email.'); return; }
+  const fileInput = document.getElementById('file-input');
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('_subject', 'New file upload — A4C');
+  Array.from(fileInput.files).forEach(f => formData.append('file', f));
+  fetch('https://formspree.io/f/mpqynnej', {
+    method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
+  }).then(r => {
+    document.getElementById('upload-success').style.display = 'block';
+    document.getElementById('file-list').innerHTML = '';
+    document.getElementById('dz-label').textContent = 'Drag files here, or click to browse';
+  }).catch(() => {
+    document.getElementById('upload-success').style.display = 'block';
+  });
+}
+
+document.getElementById('mailbox-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeMailbox();
+});
+</script>
+</body>
+</html>
