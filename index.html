@@ -1169,42 +1169,31 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 </div>
 </div>
 
-<script data-cfasync="false">
-function handleIntake(e) {
-  e.preventDefault();
-  const form = document.getElementById('intake-form');
-  const data = new FormData(form);
-  fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    body: data
-  }).then(res => res.json()).then(data => {
-    if (data.success) {
-      form.style.display = 'none';
-      document.getElementById('intake-success').style.display = 'block';
-    }
-  }).catch(err => {
-    form.style.display = 'none';
-    document.getElementById('intake-success').style.display = 'block';
-  });
-}
-
+<script>
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById(id + '-page');
   if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
 }
 
-function loopNotepad() {
-  const anims = document.querySelectorAll('#desk-page svg animate');
-  anims.forEach(a => { a.beginElement && a.beginElement(); });
+function handleIntake(e) {
+  e.preventDefault();
+  const form = document.getElementById('intake-form');
+  const data = new FormData(form);
+  fetch('https://api.web3forms.com/submit', { method:'POST', body:data })
+    .then(res => res.json())
+    .then(res => {
+      form.style.display = 'none';
+      document.getElementById('intake-success').style.display = 'block';
+    })
+    .catch(() => {
+      form.style.display = 'none';
+      document.getElementById('intake-success').style.display = 'block';
+    });
 }
-setInterval(loopNotepad, 5200);
-
-
 
 function openMailbox() {
-  const m = document.getElementById('mailbox-modal');
-  m.style.display = 'flex';
+  document.getElementById('mailbox-modal').style.display = 'flex';
 }
 
 function closeMailbox() {
@@ -1239,7 +1228,7 @@ function filesSelected(files) {
   document.getElementById('dz-label').textContent = count + ' file' + (count !== 1 ? 's' : '') + ' selected';
   Array.from(files).forEach(f => {
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(180,150,100,0.15);font-family:\'Playfair Display\',serif;font-size:11px;font-style:italic;color:rgba(74,48,32,0.7)';
+    row.style.cssText = "display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(180,150,100,0.15);font-family:'Playfair Display',serif;font-size:11px;font-style:italic;color:rgba(74,48,32,0.7)";
     row.innerHTML = '<span style="color:rgba(155,69,32,0.4);font-style:normal">—</span>' + f.name;
     list.appendChild(row);
   });
@@ -1249,27 +1238,24 @@ function submitUpload() {
   const name = document.getElementById('upload-name').value;
   const email = document.getElementById('upload-email').value;
   if (!name || !email) { alert('Please enter your name and email.'); return; }
-  const fileInput = document.getElementById('file-input');
   const formData = new FormData();
   formData.append('access_key', 'c849fe86-97ea-4bae-907c-3ef0dde53773');
   formData.append('name', name);
   formData.append('email', email);
   formData.append('subject', 'New file upload — A4C');
-  Array.from(fileInput.files).forEach(f => formData.append('file', f));
-  fetch('https://api.web3forms.com/submit', {
-    method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
-  }).then(r => {
-    document.getElementById('upload-success').style.display = 'block';
-    document.ge  document.getElementById('upload-success').style.display = 'block';
-    document.getElementById('file-list').innerHTML = '';
-    document.getElementById('dz-label').textContent = 'Drag files here, or click to browse';
-  }).catch(() => {
-    document.getElementById('upload-success').style.display = 'block';
-  });
+  Array.from(document.getElementById('file-input').files).forEach(f => formData.append('file', f));
+  fetch('https://api.web3forms.com/submit', { method:'POST', body:formData })
+    .then(() => { document.getElementById('upload-success').style.display = 'block'; })
+    .catch(() => { document.getElementById('upload-success').style.display = 'block'; });
 }
 
-document.getElementById('mailbox-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeMailbox();
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('mailbox-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeMailbox();
+  });
+  setInterval(function() {
+    document.querySelectorAll('#desk-page svg animate').forEach(a => { a.beginElement && a.beginElement(); });
+  }, 5200);
 });
 </script>
 </body>
