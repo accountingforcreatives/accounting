@@ -515,14 +515,14 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
     </div>
 
     <div class="lh-sig">A4C</div>
-    <div class="lh-sig-sub">hello@accountingforcreatives.studio</div>
+    <div class="lh-sig-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe969b929291be9f9d9d918b908a97909998918c9d8c9b9f8a97889b8dd08d8a8b9a9791">[email&#160;protected]</a></div>
   </div>
 
   <!-- Business card -->
   <div class="biz-card fi d1">
     <div class="bc-name">Accounting<br>for Creatives</div>
     <div class="bc-title">Financial Practice for the Arts</div>
-    <div class="bc-contact">hello@accountingforcreatives.studio<br>Lower East Side, New York<br>By appointment only</div>
+    <div class="bc-contact"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a020f0606052a0b0909051f041e03040d0c051809180f0b1e031c0f1944191e1f0e0305">[email&#160;protected]</a><br>Lower East Side, New York<br>By appointment only</div>
     <div class="bc-accent">A</div>
   </div>
 
@@ -1063,7 +1063,7 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
     <!-- INTAKE PANEL -->
     <div id="fpanel-intake" class="pf-wrap">
       <form action="https://api.web3forms.com/submit" method="POST" id="intake-form" onsubmit="handleIntake(event)">
-        <input type="hidden" name="access_key" value="c849fe86-97ea-4bae-907c-3ef0dde53773">
+        <input type="hidden" name="access_key" value="1557bd49-9ee1-4d8f-906d-a87cc178b84e">
         <input type="hidden" name="subject" value="New Client Intake — A4C">
         <input type="hidden" name="redirect" value="https://accountingforcreatives.github.io/accounting-for-creatives">
         <div class="pf-section">Personal</div>        <div class="pf-row">
@@ -1169,7 +1169,7 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById(id + '-page');
@@ -1239,24 +1239,11 @@ function submitUpload() {
   const email = document.getElementById('upload-email').value;
   if (!name || !email) { alert('Please enter your name and email.'); return; }
   const formData = new FormData();
-  formData.append('access_key', 'c849fe86-97ea-4bae-907c-3ef0dde53773');
+  formData.append('access_key', '1557bd49-9ee1-4d8f-906d-a87cc178b84e');
   formData.append('name', name);
   formData.append('email', email);
   formData.append('subject', 'New file upload — A4C');
   Array.from(document.getElementById('file-input').files).forEach(f => formData.append('file', f));
   fetch('https://api.web3forms.com/submit', { method:'POST', body:formData })
     .then(() => { document.getElementById('upload-success').style.display = 'block'; })
-    .catch(() => { document.getElementById('upload-success').style.display = 'block'; });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('mailbox-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeMailbox();
-  });
-  setInterval(function() {
-    document.querySelectorAll('#desk-page svg animate').forEach(a => { a.beginElement && a.beginElement(); });
-  }, 5200);
-});
-</script>
-</body>
-</html>
+    .catch(() => { document.getElementById('upload-success').style.display = 'b
