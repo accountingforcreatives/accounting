@@ -420,6 +420,7 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 .fi.d5{animation-delay:0.3s}
 .fi.d6{animation-delay:0.38s}
 </style>
+<meta name="cf-2fa-verify" content="none">
 </head>
 <body>
 
@@ -514,14 +515,14 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
     </div>
 
     <div class="lh-sig">A4C</div>
-    <div class="lh-sig-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dfb7bab3b3b09fbebcbcb0aab1abb6b1b8b9b0adbcadbabeabb6a9baacf1acabaabbb6b0">[email&#160;protected]</a></div>
+    <div class="lh-sig-sub">hello@accountingforcreatives.studio</div>
   </div>
 
   <!-- Business card -->
   <div class="biz-card fi d1">
     <div class="bc-name">Accounting<br>for Creatives</div>
     <div class="bc-title">Financial Practice for the Arts</div>
-    <div class="bc-contact"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92faf7fefefdd2f3f1f1fde7fce6fbfcf5f4fde0f1e0f7f3e6fbe4f7e1bce1e6e7f6fbfd">[email&#160;protected]</a><br>Lower East Side, New York<br>By appointment only</div>
+    <div class="bc-contact">hello@accountingforcreatives.studio<br>Lower East Side, New York<br>By appointment only</div>
     <div class="bc-accent">A</div>
   </div>
 
@@ -1168,7 +1169,7 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false">
 function handleIntake(e) {
   e.preventDefault();
   const form = document.getElementById('intake-form');
@@ -1259,4 +1260,17 @@ function submitUpload() {
     method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
   }).then(r => {
     document.getElementById('upload-success').style.display = 'block';
-    document.get
+    document.ge  document.getElementById('upload-success').style.display = 'block';
+    document.getElementById('file-list').innerHTML = '';
+    document.getElementById('dz-label').textContent = 'Drag files here, or click to browse';
+  }).catch(() => {
+    document.getElementById('upload-success').style.display = 'block';
+  });
+}
+
+document.getElementById('mailbox-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeMailbox();
+});
+</script>
+</body>
+</html>
