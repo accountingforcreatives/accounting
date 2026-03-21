@@ -514,14 +514,14 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
     </div>
 
     <div class="lh-sig">A4C</div>
-    <div class="lh-sig-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="046c6168686b446530672a777071606d6b">[email&#160;protected]</a></div>
+    <div class="lh-sig-sub">hello@accountingforcreatives.studio</div>
   </div>
 
   <!-- Business card -->
   <div class="biz-card fi d1">
     <div class="bc-name">Accounting<br>for Creatives</div>
     <div class="bc-title">Financial Practice for the Arts</div>
-    <div class="bc-contact"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="39515c55555679580d5a174a4d4c5d5056">[email&#160;protected]</a><br>Lower East Side, New York<br>By appointment only</div>
+    <div class="bc-contact">hello@accountingforcreatives.studio<br>Lower East Side, New York<br>By appointment only</div>
     <div class="bc-accent">A</div>
   </div>
 
@@ -1165,7 +1165,7 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById(id + '-page');
@@ -1229,11 +1229,12 @@ function submitUpload() {
   if (!name || !email) { alert('Please enter your name and email.'); return; }
   const fileInput = document.getElementById('file-input');
   const formData = new FormData();
+  formData.append('access_key', 'c849fe86-97ea-4bae-907c-3ef0dde53773');
   formData.append('name', name);
   formData.append('email', email);
-  formData.append('_subject', 'New file upload — A4C');
+  formData.append('subject', 'New file upload — A4C');
   Array.from(fileInput.files).forEach(f => formData.append('file', f));
-  fetch('https://formspree.io/f/xgonbzdq', {
+  fetch('https://api.web3forms.com/submit', {
     method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
   }).then(r => {
     document.getElementById('upload-success').style.display = 'block';
