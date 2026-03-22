@@ -1062,10 +1062,7 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 
     <!-- INTAKE PANEL -->
     <div id="fpanel-intake" class="pf-wrap">
-      <form action="https://api.web3forms.com/submit" method="POST" id="intake-form" onsubmit="handleIntake(event)">
-        <input type="hidden" name="access_key" value="1557bd49-9ee1-4d8f-906d-a87cc178b84e">
-        <input type="hidden" name="subject" value="New Client Intake — A4C">
-        <input type="hidden" name="redirect" value="https://accountingforcreatives.github.io/accounting-for-creatives">
+      <form id="intake-form" onsubmit="handleIntake(event)">
         <div class="pf-section">Personal</div>        <div class="pf-row">
           <div class="pf-field"><label class="pf-label">First Name</label><input class="pf-input" type="text" name="first_name" placeholder="Given name" required></div>
           <div class="pf-field"><label class="pf-label">Last Name</label><input class="pf-input" type="text" name="last_name" placeholder="Family name" required></div>
@@ -1169,7 +1166,10 @@ textarea.pf-input{resize:none;min-height:88px;line-height:1.7;margin-top:3px}
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+emailjs.init('qbhIatDTMoI0uAm0l');
+
 document.addEventListener('DOMContentLoaded', function() {
 
 window.showPage = function(id) {
@@ -1181,15 +1181,17 @@ window.showPage = function(id) {
 window.handleIntake = function(e) {
   e.preventDefault();
   var form = document.getElementById('intake-form');
-  var data = new FormData(form);
-  fetch('https://api.web3forms.com/submit', { method: 'POST', body: data })
-    .then(function(r){ return r.json(); })
-    .then(function(){ 
+  var btn = form.querySelector('button[type=submit]');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  emailjs.sendForm('service_br68mdr', 'template_gy7aj6s', form)
+    .then(function() {
       form.style.display = 'none';
       document.getElementById('intake-success').style.display = 'block';
-    }).catch(function(){
-      form.style.display = 'none';
-      document.getElementById('intake-success').style.display = 'block';
+    }, function(err) {
+      btn.textContent = 'Submit Intake';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
     });
 };
 
