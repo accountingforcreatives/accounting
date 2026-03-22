@@ -1239,16 +1239,21 @@ window.submitUpload = function() {
   var name = document.getElementById('upload-name').value;
   var email = document.getElementById('upload-email').value;
   if (!name || !email) { alert('Please enter your name and email.'); return; }
-  var formData = new FormData();
-  formData.append('access_key', '1557bd49-9ee1-4d8f-906d-a87cc178b84e');
-  formData.append('name', name);
-  formData.append('email', email);
-  formData.append('subject', 'New file upload - A4C');
-  var files = document.getElementById('file-input').files;
-  Array.from(files).forEach(function(f) { formData.append('file', f); });
-  fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData })
-    .then(function(){ document.getElementById('upload-success').style.display = 'block'; })
-    .catch(function(){ document.getElementById('upload-success').style.display = 'block'; });
+  var params = {
+    first_name: name,
+    email: email,
+    message: 'File upload request from ' + name,
+    phone: '',
+    location: '',
+    discipline: '',
+    years_in_practice: '',
+    business_structure: '',
+    revenue_range: '',
+    referral: ''
+  };
+  emailjs.send('service_br68mdr', 'template_gy7aj6s', params)
+    .then(function() { document.getElementById('upload-success').style.display = 'block'; })
+    .catch(function() { document.getElementById('upload-success').style.display = 'block'; });
 };
 
 document.getElementById('mailbox-modal').addEventListener('click', function(e) {
